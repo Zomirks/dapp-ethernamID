@@ -8,8 +8,8 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 contract EthernamID is ERC721, Ownable {
     address public teamWallet;
     uint256 private _nextTokenId;
-    uint256 public constant _mintPrice = 120;
-    uint256 public constant referralAmount = 20;
+    uint256 public constant _mintPrice = 120 * 10^6;
+    uint256 public constant referralAmount = 20 * 10^6;
     address constant _usdcAddress = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
     
     IERC20 usdc = IERC20(_usdcAddress);
@@ -37,8 +37,8 @@ contract EthernamID is ERC721, Ownable {
      * @dev message sender can mint
      */
     function mintEthernamID() external {
-        require(_getUsdcBalanceOf(msg.sender) > _mintPrice * 10^6, "Not enough balance");
-        require(usdc.transferFrom(msg.sender, address(this), _mintPrice * 10^6), "USDC transfer failed");
+        require(_getUsdcBalanceOf(msg.sender) > _mintPrice, "Not enough balance");
+        require(usdc.transferFrom(msg.sender, address(this), _mintPrice), "USDC transfer failed");
 
         uint256 tokenId = _nextTokenId;
         _safeMint(msg.sender, tokenId);
@@ -50,8 +50,8 @@ contract EthernamID is ERC721, Ownable {
         address referrer = refCodeToAddress[_refCode];
         require(referrer != address(0), "Invalid referral code");
         require(referrals[refCodeToAddress[_refCode]].isActive == true, "RefCode isn't active");
-        require(_getUsdcBalanceOf(msg.sender) > _mintPrice * 10^6, "Not enough balance");
-        require(usdc.transferFrom(msg.sender, address(this), _mintPrice * 10^6), "USDC transfer failed");
+        require(_getUsdcBalanceOf(msg.sender) > _mintPrice, "Not enough balance");
+        require(usdc.transferFrom(msg.sender, address(this), _mintPrice), "USDC transfer failed");
 
         uint256 tokenId = _nextTokenId;
         _safeMint(msg.sender, tokenId);
