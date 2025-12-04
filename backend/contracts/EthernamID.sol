@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract EthernamID is ERC721, Ownable {
+    address public teamWallet;
     uint256 private _nextTokenId;
     uint256 public constant _mintPrice = 120;
     uint256 public constant referralAmount = 20;
@@ -26,9 +27,11 @@ contract EthernamID is ERC721, Ownable {
   
     /**
      * @dev Smart Contract Constructor
-     * @param initialOwner Smart Contract Owner
+     * @param _teamWallet Wallet of the team
      */
-    constructor(address initialOwner) ERC721("Ethernam ID", "EID") Ownable(initialOwner) {}
+    constructor(address _teamWallet) ERC721("Ethernam ID", "EID") Ownable(msg.sender) {
+        teamWallet = _teamWallet;
+    }
     
     /**
      * @dev message sender can mint
