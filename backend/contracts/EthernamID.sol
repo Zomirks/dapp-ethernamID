@@ -8,7 +8,8 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 contract EthernamID is ERC721, Ownable {
     address private teamWallet;
     uint256 private _nextTokenId;
-    uint256 private constant _mintPrice = 120 * 10^6;
+    uint256 private constant _mintPrice = 120;
+    uint256 private constant referralAmount = 20;
     
     IERC20 usdc;
 
@@ -28,7 +29,8 @@ contract EthernamID is ERC721, Ownable {
      * @dev message sender can mint
      */
     function mintEthernamID() external {
-        require(_getUsdcBalanceOf(msg.sender) > _mintPrice, "Not enough balance");
+        require(_getUsdcBalanceOf(msg.sender) >= _mintPrice, "Not enough balance");
+        require(usdc.allowance(msg.sender, address(this)) >= _mintPrice, "Not enough USDC approved");
         require(usdc.transferFrom(msg.sender, address(this), _mintPrice), "USDC transfer failed");
 
         uint256 tokenId = _nextTokenId;
