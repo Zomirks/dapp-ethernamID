@@ -13,6 +13,11 @@ contract EthernamID is ERC721, Ownable {
     
     IERC20 usdc;
 
+    mapping(string => address) public refCodeToAddress;
+    mapping(address => string) public addressToRefCode;
+
+    event ReferralRegistered(string indexed referralCode, address indexed referralAddress);
+    event ReferralRemoved(string referralCode, address referralAddress);
     event EthernamIDMinted(address indexed minter, uint256 indexed tokenId, address indexed referrer);
   
     /**
@@ -39,11 +44,11 @@ contract EthernamID is ERC721, Ownable {
         emit EthernamIDMinted(msg.sender, tokenId, address(0));
     }
 
-    function mintEthernamID(bytes8 _refCode) external {
+    function mintEthernamID(string memory _refCode) external {
         address referrer = refCodeToAddress[_refCode];
         require(referrer != address(0), "Invalid referral code");
-        require(referrals[refCodeToAddress[_refCode]].isActive == true, "RefCode isn't active");
-        require(_getUsdcBalanceOf(msg.sender) > _mintPrice, "Not enough balance");
+        require(_getUsdcBalanceOf(msg.sender) >= _mintPrice, "Not enough balance");
+        require(usdc.allowance(msg.sender, address(this)) >= _mintPrice, "Not enough USDC approved");
         require(usdc.transferFrom(msg.sender, address(this), _mintPrice), "USDC transfer failed");
 
         uint256 tokenId = _nextTokenId;
@@ -59,25 +64,24 @@ contract EthernamID is ERC721, Ownable {
         return usdc.balanceOf(_user);
     }
 
-    function addReferral(bytes8 _refCode, address _refAddress) external onlyOwner {
+    function addReferral(string memory _refCode, address _refAddress) external onlyOwner {
         require(refCodeToAddress[_refCode] == address(0), "Code is already in use");
+        require(bytes(addressToRefCode[_refAddress]).length == 0, "Address has already a Referral code");
         require(_refAddress != address(0), "Invalid address");
-        require(_refCode != bytes8(0), "Invalid referral code");
         
         refCodeToAddress[_refCode] = _refAddress;
-        referrals[_refAddress].isActive = true;
+        addressToRefCode[_refAddress] = _refCode;
 
         emit ReferralRegistered(_refCode, _refAddress);
     }
 
-    function removeReferral(bytes8 _refCode) external onlyOwner {
+    function removeReferral(string memory _refCode) external onlyOwner {
         address refAddress = refCodeToAddress[_refCode];
         require(refAddress != address(0), "This referral code doesn't exist");
-        require(referrals[refAddress].balanceToClaim == 0, "Referral has balance to claim, you can't remove it");
         
         emit ReferralRemoved(_refCode, refAddress);
         
         delete refCodeToAddress[_refCode];
-        delete referrals[refAddress];
+        delete addressToRefCode[refAddress];
     }
 }
