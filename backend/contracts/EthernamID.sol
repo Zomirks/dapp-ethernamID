@@ -4,8 +4,9 @@ pragma solidity ^0.8.28;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuardTransient.sol";
 
-contract EthernamID is ERC721, Ownable {
+contract EthernamID is ERC721, Ownable, ReentrancyGuardTransient {
     address private teamWallet;
     uint256 private _nextTokenId;
     uint256 private constant _mintPrice = 120;
@@ -16,8 +17,11 @@ contract EthernamID is ERC721, Ownable {
     mapping(string => address) public refCodeToAddress;
     mapping(address => string) public addressToRefCode;
 
+    mapping(address => uint256) private balanceToClaim;
+
     event ReferralRegistered(string indexed referralCode, address indexed referralAddress);
-    event ReferralRemoved(string referralCode, address referralAddress);
+    event ReferralRemoved(string indexed referralCode, address indexed referralAddress);
+    event BalanceClaimed(address indexed Address, uint256 balanceClaimed);
     event EthernamIDMinted(address indexed minter, uint256 indexed tokenId, address indexed referrer);
   
     /**
@@ -40,6 +44,8 @@ contract EthernamID is ERC721, Ownable {
         uint256 tokenId = _nextTokenId;
         _safeMint(msg.sender, tokenId);
 
+        balanceToClaim[teamWallet] += _mintPrice;
+
         ++_nextTokenId;
         emit EthernamIDMinted(msg.sender, tokenId, address(0));
     }
@@ -54,7 +60,8 @@ contract EthernamID is ERC721, Ownable {
         uint256 tokenId = _nextTokenId;
         _safeMint(msg.sender, tokenId);
 
-        referrals[refCodeToAddress[_refCode]].balanceToClaim += referralAmount;
+        balanceToClaim[teamWallet] += _mintPrice - referralAmount;
+        balanceToClaim[referrer] += referralAmount;
         
         ++_nextTokenId;
         emit EthernamIDMinted(msg.sender, tokenId, referrer);
@@ -83,5 +90,23 @@ contract EthernamID is ERC721, Ownable {
         
         delete refCodeToAddress[_refCode];
         delete addressToRefCode[refAddress];
+    }
+
+    function claimBalance() external nonReentrant {
+        uint256 amount = balanceToClaim[msg.sender];
+        require(amount > 0, "You have nothing to claim");
+        balanceToClaim[msg.sender] = 0;
+        
+        require(usdc.transfer(msg.sender, amount), "Transaction Failed");
+
+        emit BalanceClaimed(msg.sender, amount);
+    }
+
+    function getBalanceToClaim(address _addr) external view returns (uint256){
+        return balanceToClaim[_addr];
+    }
+
+    function getContractBalance() external view onlyOwner returns (uint256){
+        return usdc.balanceOf(address(this));
     }
 }
