@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuardTransient.sol";
 
-contract EthernamID is ERC721, Ownable, ReentrancyGuardTransient {
+contract EternamID is ERC721, Ownable, ReentrancyGuardTransient {
     address private teamWallet;
     uint256 private _nextTokenId;
     uint256 private constant _mintPrice = 120 * 10**6;
@@ -22,13 +22,13 @@ contract EthernamID is ERC721, Ownable, ReentrancyGuardTransient {
     event ReferralRegistered(string indexed referralCode, address indexed referralAddress);
     event ReferralRemoved(string indexed referralCode, address indexed referralAddress);
     event BalanceClaimed(address indexed Address, uint256 balanceClaimed);
-    event EthernamIDMinted(address indexed minter, uint256 indexed tokenId, address indexed referrer);
+    event EternamIDMinted(address indexed minter, uint256 indexed tokenId, address indexed referrer);
   
     /**
      * @dev Smart Contract Constructor
      * @param _teamWallet Wallet of the team
      */
-    constructor(address _teamWallet, address _usdcAddress) ERC721("Ethernam ID", "EID") Ownable(msg.sender) {
+    constructor(address _teamWallet, address _usdcAddress) ERC721("Eternam ID", "EID") Ownable(msg.sender) {
         teamWallet = _teamWallet;
         usdc = IERC20(_usdcAddress);
     }
@@ -36,7 +36,7 @@ contract EthernamID is ERC721, Ownable, ReentrancyGuardTransient {
     /**
      * @dev message sender can mint
      */
-    function mintEthernamID() external {
+    function mintEternamID() external {
         require(_getUsdcBalanceOf(msg.sender) >= _mintPrice, "Not enough balance");
         require(usdc.allowance(msg.sender, address(this)) >= _mintPrice, "Not enough USDC approved");
         require(usdc.transferFrom(msg.sender, address(this), _mintPrice), "USDC transfer failed");
@@ -47,10 +47,10 @@ contract EthernamID is ERC721, Ownable, ReentrancyGuardTransient {
         balanceToClaim[teamWallet] += _mintPrice;
 
         ++_nextTokenId;
-        emit EthernamIDMinted(msg.sender, tokenId, address(0));
+        emit EternamIDMinted(msg.sender, tokenId, address(0));
     }
 
-    function mintEthernamID(string memory _refCode) external {
+    function mintEternamID(string memory _refCode) external {
         address referrer = refCodeToAddress[_refCode];
         require(referrer != address(0), "Invalid referral code");
         require(_getUsdcBalanceOf(msg.sender) >= _mintPrice, "Not enough balance");
@@ -64,7 +64,7 @@ contract EthernamID is ERC721, Ownable, ReentrancyGuardTransient {
         balanceToClaim[referrer] += referralAmount;
         
         ++_nextTokenId;
-        emit EthernamIDMinted(msg.sender, tokenId, referrer);
+        emit EternamIDMinted(msg.sender, tokenId, referrer);
     }
 
     function _getUsdcBalanceOf(address _user) internal view returns (uint256) {
