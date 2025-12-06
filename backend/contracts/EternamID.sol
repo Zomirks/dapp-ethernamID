@@ -154,4 +154,15 @@ contract EternamID is ERC721, Ownable, ReentrancyGuardTransient {
     function totalSupply() external view returns (uint256) {
         return tokenId;
     }
+
+    /**
+     * @notice Rescues ERC20 tokens accidentally sent to this contract
+     * @dev Only callable by owner. Cannot rescue USDC to protect user funds
+     * @param _token Address of the ERC20 token to rescue
+     * @param _amount Amount of tokens to rescue
+     */
+    function rescueTokens(address _token, uint256 _amount) external onlyOwner {
+        require(_token != address(usdc), "Cannot rescue USDC");
+        IERC20(_token).transfer(owner(), _amount);
+    }
 }
