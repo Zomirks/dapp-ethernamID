@@ -9,8 +9,8 @@ import "@openzeppelin/contracts/utils/ReentrancyGuardTransient.sol";
 contract EthernamID is ERC721, Ownable, ReentrancyGuardTransient {
     address private teamWallet;
     uint256 private _nextTokenId;
-    uint256 private constant _mintPrice = 120;
-    uint256 private constant referralAmount = 20;
+    uint256 private constant _mintPrice = 120 * 10**6;
+    uint256 private constant referralAmount = 20 * 10**6;
     
     IERC20 usdc;
 
