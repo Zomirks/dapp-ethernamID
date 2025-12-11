@@ -9,9 +9,17 @@ import {useReadContract, useAccount } from 'wagmi'
 
 import Image from "next/image";
 import Faucet from "./Faucet";
+import MintEternamID from "./MintEternamID";
+import NFTBalance from "./NFTBalance";
 
 const EternamID = () => {
 	const { address } = useAccount();
+
+	const { data: NFTTotalSupply, refetch: refetchNFTSupply } = useReadContract({
+		address: CONTRACT_ETERNAMID_ADDRESS,
+		abi: CONTRACT_ETERNAMID_ABI,
+		functionName: 'totalSupply',
+	});
 
 	const { data: usdcBalance, refetch: refetchBalance } = useReadContract({
 		address: CONTRACT_USDC_ADDRESS,
@@ -22,9 +30,10 @@ const EternamID = () => {
 
 	useEffect(() => {
 		refetchBalance();
+		refetchNFTSupply();
 	}, []);
 
-  return (
+	return (
 		<div>
 			<div className="flex items-center justify-between mb-4">
 				<div>
@@ -42,8 +51,17 @@ const EternamID = () => {
 
 				<Faucet onFaucetSuccess={refetchBalance} />
 			</div>
+
+			<div className="grid grid-cols-2 gap-x-4">
+				<NFTBalance />
+				<MintEternamID 
+					totalSupply={NFTTotalSupply ? Number(NFTTotalSupply) : 0}
+					onMintSuccess={refetchNFTSupply}
+				/>
 			</div>
-  )
+
+		</div>
+	)
 }
 
 export default EternamID
