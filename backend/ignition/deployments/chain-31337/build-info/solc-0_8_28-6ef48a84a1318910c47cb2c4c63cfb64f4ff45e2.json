@@ -1,6 +1,6 @@
 {
   "_format": "hh3-sol-build-info-1",
-  "id": "solc-0_8_28-60e7631f0b5810a0ed421acd01c11b5ae5b545fc",
+  "id": "solc-0_8_28-6ef48a84a1318910c47cb2c4c63cfb64f4ff45e2",
   "solcVersion": "0.8.28",
   "solcLongVersion": "0.8.28+commit.7893614a",
   "userSourceNameMap": {
@@ -30,7 +30,8 @@
       },
       "remappings": [
         "project/:@openzeppelin/contracts/=npm/@openzeppelin/contracts@5.4.0/"
-      ]
+      ],
+      "viaIR": true
     },
     "sources": {
       "npm/@openzeppelin/contracts@5.4.0/interfaces/draft-IERC6093.sol": {

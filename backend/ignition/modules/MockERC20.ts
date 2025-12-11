@@ -6,10 +6,9 @@ export default buildModule("MockERC20", (m) => {
     const usdc = m.contract("MockERC20", ["USDC", "USDC", 6]);
     m.call(usdc, "mint", [account, 200 * 10 ** 6]);
 
-    const ethernamID = m.contract("EthernamID", [teamWallet, usdc]);
+    const eternamID = m.contract("EternamID", [teamWallet, usdc]);
 
-    m.call(usdc, "approve", [ethernamID, 120]);
-    m.call(ethernamID, "mintEthernamID()");
+    m.call(usdc, "approve", [eternamID, 120]);
 
-    return { usdc, ethernamID };
+    return { usdc, eternamID };
 });
