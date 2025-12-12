@@ -11,6 +11,7 @@ import Image from "next/image";
 import Faucet from "./Faucet";
 import MintEternamID from "./MintEternamID";
 import NFTBalance from "./NFTBalance";
+import Referral from "./Referral";
 
 const EternamID = () => {
 	const { address } = useAccount();
@@ -51,6 +52,8 @@ const EternamID = () => {
 
 				<Faucet onFaucetSuccess={refetchBalance} />
 			</div>
+
+			<Referral onClaimSuccess={refetchBalance} />
 
 			<div className="grid grid-cols-2 gap-x-4">
 				<NFTBalance />
