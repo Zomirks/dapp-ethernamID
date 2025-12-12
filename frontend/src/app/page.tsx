@@ -2,7 +2,6 @@
 import NotConnected from "@/components/shared/NotConnected";
 
 import { useAccount, useReadContract } from 'wagmi';
-import { CONTRACT_ABI, CONTRACT_ADDRESS } from '@/utils/constants';
 import EternamID from "@/components/shared/EternamID";
 
 export default function Home() {

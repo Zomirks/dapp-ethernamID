@@ -116,7 +116,7 @@ const NFTBalance = () => {
 			<div className="space-y-4">
 				<h2 className="text-xl font-bold mb-4">Mes capsules EternamID</h2>
 				<div className="p-8 text-center text-gray-500 border rounded-lg">
-					Vous ne possédez aucun Eternam ID pour le moment.
+					Vous ne possédez aucune capsule EternamID pour le moment.
 				</div>
 			</div>
 		);
