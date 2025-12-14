@@ -3,14 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAccount, useReadContract, usePublicClient } from 'wagmi';
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
 
 import { CONTRACT_ETERNAMID_ADDRESS, CONTRACT_ETERNAMID_ABI } from "@/utils/constants";
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
 
 interface NFTMetadata {
 	name: string;
@@ -26,6 +20,31 @@ interface NFTData {
 	tokenId: number;
 	metadata: NFTMetadata | null;
 }
+
+// Icons
+const ExternalLinkIcon = ({ className = "" }: { className?: string }) => (
+	<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+		<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" strokeLinecap="round" strokeLinejoin="round" />
+		<polyline points="15,3 21,3 21,9" strokeLinecap="round" strokeLinejoin="round" />
+		<line x1="10" y1="14" x2="21" y2="3" strokeLinecap="round" strokeLinejoin="round" />
+	</svg>
+);
+
+const LayersIcon = ({ className = "" }: { className?: string }) => (
+	<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+		<polygon points="12,2 2,7 12,12 22,7 12,2" strokeLinecap="round" strokeLinejoin="round" />
+		<polyline points="2,17 12,22 22,17" strokeLinecap="round" strokeLinejoin="round" />
+		<polyline points="2,12 12,17 22,12" strokeLinecap="round" strokeLinejoin="round" />
+	</svg>
+);
+
+const ImageIcon = ({ className = "" }: { className?: string }) => (
+	<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+		<rect x="3" y="3" width="18" height="18" rx="2" ry="2" strokeLinecap="round" strokeLinejoin="round" />
+		<circle cx="8.5" cy="8.5" r="1.5" strokeLinecap="round" strokeLinejoin="round" />
+		<polyline points="21,15 16,10 5,21" strokeLinecap="round" strokeLinejoin="round" />
+	</svg>
+);
 
 const NFTBalance = () => {
 	const { address } = useAccount();
@@ -70,7 +89,6 @@ const NFTBalance = () => {
 
 					const base64Data = tokenURI.replace('data:application/json;base64,', '');
 					const jsonString = atob(base64Data);
-					console.log('Token', i, 'JSON:', jsonString);
 					const metadata: NFTMetadata = JSON.parse(jsonString);
 
 					nfts.push({ tokenId: i, metadata });
@@ -90,19 +108,26 @@ const NFTBalance = () => {
 
 	if (isLoading) {
 		return (
-			<div className="space-y-4">
-				<h2 className="text-xl font-bold mb-4">Mes capsules EternamID</h2>
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+			<div className="bento-card h-full">
+				<div className="section-header">
+					<div className="flex items-center gap-3">
+						<div className="icon-box icon-box-purple">
+							<LayersIcon className="h-5 w-5 text-white" />
+						</div>
+						<h2 className="text-xl font-bold text-eternam-light">Mes capsules EternamID</h2>
+					</div>
+				</div>
+
+				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 					{[1, 2, 3].map((i) => (
-						<Card key={i}>
-							<CardHeader>
-								<Skeleton className="h-6 w-32" />
-							</CardHeader>
-							<CardContent>
-								<Skeleton className="h-40 w-full mb-4" />
-								<Skeleton className="h-4 w-2/3" />
-							</CardContent>
-						</Card>
+						<div key={i} className="animate-pulse rounded-xl border border-border-subtle bg-surface-1 p-4">
+							<div className="mb-4 flex items-center justify-between">
+								<div className="h-5 w-32 rounded bg-surface-2" />
+								<div className="h-5 w-12 rounded bg-surface-2" />
+							</div>
+							<div className="aspect-square w-full rounded-lg bg-surface-2" />
+							<div className="mt-4 h-10 w-full rounded-lg bg-surface-2" />
+						</div>
 					))}
 				</div>
 			</div>
@@ -111,25 +136,42 @@ const NFTBalance = () => {
 
 	if (userNFTs.length === 0) {
 		return (
-			<div className="space-y-4">
-				<h2 className="text-xl font-bold mb-4">Mes capsules EternamID</h2>
-				<div className="p-8 text-center text-gray-500 border rounded-lg">
-					Vous ne possédez aucune capsule EternamID pour le moment.
+			<div className="bento-card h-full">
+				<div className="section-header">
+					<div className="flex items-center gap-3">
+						<div className="icon-box icon-box-purple">
+							<LayersIcon className="h-5 w-5 text-white" />
+						</div>
+						<h2 className="text-xl font-bold text-eternam-light">Mes capsules EternamID</h2>
+					</div>
+				</div>
+
+				<div className="flex flex-col items-center justify-center py-16 text-center">
+					<div className="icon-box icon-box-subtle mb-4 h-16 w-16">
+						<ImageIcon className="h-8 w-8 text-eternam-muted/50" />
+					</div>
+					<p className="text-eternam-muted">Vous ne possédez aucune capsule EternamID pour le moment.</p>
+					<p className="mt-1 text-sm text-eternam-muted/50">Créez votre première capsule mémorielle !</p>
 				</div>
 			</div>
 		);
 	}
 
 	return (
-		<div className="space-y-4">
-			<div className="flex items-center justify-between">
-				<h2 className="text-xl font-bold mb-4">Mes capsules EternamID</h2>
-				<Badge variant="secondary">
+		<div className="bento-card h-full">
+			<div className="section-header">
+				<div className="flex items-center gap-3">
+					<div className="icon-box icon-box-purple">
+						<LayersIcon className="h-5 w-5 text-white" />
+					</div>
+					<h2 className="text-xl font-bold text-eternam-light">Mes capsules EternamID</h2>
+				</div>
+				<span className="badge badge-emerald">
 					{userNFTs.length} NFT{userNFTs.length > 1 ? 's' : ''}
-				</Badge>
+				</span>
 			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				{userNFTs.map((nft) => (
 					<NFTCard key={nft.tokenId} nft={nft} />
 				))}
@@ -143,37 +185,39 @@ const NFTCard = ({ nft }: { nft: NFTData }) => {
 	const imageUrl = metadata?.image || '';
 
 	return (
-		<Card className="overflow-hidden hover:shadow-md transition-shadow">
-			<CardHeader className="pb-2">
-				<div className="flex items-center justify-between">
-					<CardTitle className="text-lg">
-						{metadata?.name || `Eternam ID #${nft.tokenId}`}
-					</CardTitle>
-					<Badge variant="outline" className="text-xs">
-						#{nft.tokenId}
-					</Badge>
-				</div>
-			</CardHeader>
+		<div className="group overflow-hidden rounded-xl border border-border-subtle bg-surface-1 transition-all duration-300 hover:border-border-default hover:shadow-lg hover:shadow-eternam-cyan/5">
+			<div className="flex items-center justify-between border-b border-border-subtle p-4">
+				<h3 className="truncate font-semibold text-eternam-light">
+					{metadata?.name || `Eternam ID #${nft.tokenId}`}
+				</h3>
+				<span className="badge">#{nft.tokenId}</span>
+			</div>
 
-			<CardContent className="space-y-4">
-				{imageUrl && (
-					<div className="w-full aspect-square bg-gray-100 rounded-lg overflow-hidden">
+			<div className="p-4">
+				{imageUrl ? (
+					<div className="aspect-square overflow-hidden rounded-lg bg-surface-2">
 						<img
 							src={imageUrl}
 							alt={metadata?.name || 'NFT'}
-							className="w-full h-full object-contain"
+							className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
 						/>
 					</div>
+				) : (
+					<div className="flex aspect-square items-center justify-center rounded-lg bg-surface-2">
+						<ImageIcon className="h-12 w-12 text-eternam-muted/30" />
+					</div>
 				)}
+			</div>
 
+			<div className="p-4 pt-0">
 				<Link href={`/nft/${nft.tokenId}`}>
-					<Button variant="outline" className="w-full">
-						<ExternalLink className="mr-2 h-4 w-4" />
+					<button className="btn-secondary h-10 w-full text-sm">
+						<ExternalLinkIcon className="mr-2 h-4 w-4" />
 						Voir les détails
-					</Button>
+					</button>
 				</Link>
-			</CardContent>
-		</Card>
+			</div>
+		</div>
 	);
 };
 
