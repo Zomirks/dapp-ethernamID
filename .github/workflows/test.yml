@@ -1,0 +1,49 @@
+name: Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Frontend - Prisma
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: ./frontend
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        working-directory: ./frontend
+
+      - name: Reset database
+        run: npx prisma migrate reset --force
+        working-directory: ./frontend
+
+      # Backend - Hardhat
+      - name: Install backend dependencies
+        run: npm ci
+        working-directory: ./backend
+
+      - name: Compile contracts
+        run: npx hardhat compile
+        working-directory: ./backend
+
+      - name: Run tests
+        run: npx hardhat test test/*.ts
+        working-directory: ./backend
