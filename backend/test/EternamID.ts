@@ -111,19 +111,19 @@ describe("EternamID contract", function () {
 
 		it("Should revert if hash is missing", async function () {
 			await expect(eternamID.connect(user1).mintEternamID(ethers.ZeroHash, "", 0, 0))
-				.to.be.revertedWith("Hash is required");
+				.to.be.revertedWithCustomError(eternamID, "HashIsRequired");
 		});
 
 		it("reverts when user has no USDC", async function () {
 			const [, , , , brokeUser] = await ethers.getSigners();
 			await expect(eternamID.connect(brokeUser).mintEternamID(makeHash("x"), "", 0, 0))
-				.to.be.revertedWith("Not enough balance");
+				.to.be.revertedWithCustomError(eternamID, "InsufficientUSDCBalance");
 		});
 
 		it("reverts without approval", async function () {
 			await usdc.mint(owner.address, MINT_PRICE);
 			await expect(eternamID.connect(owner).mintEternamID(makeHash("y"), "", 0, 0))
-				.to.be.revertedWith("Not enough USDC approved");
+				.to.be.revertedWithCustomError(eternamID, "InsufficientUSDCAllowance");
 		});
 
 		it("emits EternamIDMinted", async function () {
@@ -152,17 +152,17 @@ describe("EternamID contract", function () {
 
 		it("rejects non-existing father", async function () {
 			await expect(eternamID.connect(user1).mintEternamID(makeHash("orphelin"), "", 999, 0))
-				.to.be.revertedWith("Parent NFT doesn't exist");
+				.to.be.revertedWithCustomError(eternamID, "ParentNFTDoesNotExist");
 		});
 
 		it("rejects non-existing mother", async function () {
 			await expect(eternamID.connect(user1).mintEternamID(makeHash("orphelin2"), "", 0, 888))
-				.to.be.revertedWith("Parent NFT doesn't exist");
+				.to.be.revertedWithCustomError(eternamID, "ParentNFTDoesNotExist");
 		});
 
 		it("rejects same parent for both", async function () {
 			await expect(eternamID.connect(user1).mintEternamID(makeHash("clone?"), "", 1, 1))
-				.to.be.revertedWith("Parents must be different");
+				.to.be.revertedWithCustomError(eternamID, "ParentsMustBeDifferent");
 		});
 
 		it("emits ParentsUpdated when parents are set", async function () {
@@ -187,18 +187,18 @@ describe("EternamID contract", function () {
 		it("rejects duplicate codes", async function () {
 			await eternamID.addReferral("CODE123", user1.address);
 			await expect(eternamID.addReferral("CODE123", user2.address))
-				.to.be.revertedWith("Code is already in use");
+				.to.be.revertedWithCustomError(eternamID, "ReferralCodeAlreadyInUse");
 		});
 
 		it("rejects if address already has a code", async function () {
 			await eternamID.addReferral("FIRST", user1.address);
 			await expect(eternamID.addReferral("SECOND", user1.address))
-				.to.be.revertedWith("Address has already a Referral code");
+				.to.be.revertedWithCustomError(eternamID, "AddressAlreadyHasReferralCode");
 		});
 
 		it("rejects zero address", async function () {
 			await expect(eternamID.addReferral("VOID", ethers.ZeroAddress))
-				.to.be.revertedWith("Invalid address");
+				.to.be.revertedWithCustomError(eternamID, "InvalidAddress");
 		});
 
 		it("only owner can add referrals", async function () {
@@ -228,7 +228,7 @@ describe("EternamID contract", function () {
 
 		it("rejects unknown code", async function () {
 			await expect(eternamID.removeReferral("NOPE"))
-				.to.be.revertedWith("This referral code doesn't exist");
+				.to.be.revertedWithCustomError(eternamID, "ReferralCodeDoesNotExist");
 		});
 
 		it("only owner", async function () {
@@ -264,7 +264,7 @@ describe("EternamID contract", function () {
 
 		it("can't use your own referral code", async function () {
 			await expect(eternamID.connect(user2).mintEternamID(makeHash("self_ref"), "MUSIC2024", 0, 0))
-				.to.be.revertedWith("Can't use own referral code");
+				.to.be.revertedWithCustomError(eternamID, "CannotUseOwnReferralCode");
 		});
 
 		it("unknown code = no referral & all to team", async function () {
@@ -299,7 +299,7 @@ describe("EternamID contract", function () {
 
 		it("reverts if nothing to claim", async function () {
 			await expect(eternamID.connect(user1).claimBalance())
-				.to.be.revertedWith("You have nothing to claim");
+				.to.be.revertedWithCustomError(eternamID, "NothingToClaim");
 		});
 
 		it("emits BalanceClaimed", async function () {
@@ -318,22 +318,22 @@ describe("EternamID contract", function () {
 
 		it("Should revert for non-existing token id", async function () {
 			await expect(eternamID.setParents(999, 1, 2))
-				.to.be.revertedWith("TokenId doesn't exist");
+				.to.be.revertedWithCustomError(eternamID, "TokenDoesNotExist");
 		});
 
-		it("Should revert for  non-existing parent id", async function () {
+		it("Should revert for non-existing parent id", async function () {
 			await expect(eternamID.setParents(1, 999, 0))
-				.to.be.revertedWith("Parent Token ID doesn't exist");
+				.to.be.revertedWithCustomError(eternamID, "ParentTokenDoesNotExist");
 		});
 
-		it("can't be your own parent ", async function () {
+		it("can't be your own parent", async function () {
 			await expect(eternamID.setParents(1, 1, 0))
-				.to.be.revertedWith("Can't be self parent");
+				.to.be.revertedWithCustomError(eternamID, "CannotBeSelfParent");
 		});
 
 		it("parents must be different", async function () {
 			await expect(eternamID.setParents(3, 1, 1))
-				.to.be.revertedWith("Parents must be different");
+				.to.be.revertedWithCustomError(eternamID, "ParentsMustBeDifferent");
 		});
 	});
 
@@ -349,7 +349,7 @@ describe("EternamID contract", function () {
 
 		it("Should revert for non-existing token", async function () {
 			await expect(eternamID.tokenURI(42))
-				.to.be.revertedWith("Token doesn't exist");
+				.to.be.revertedWithCustomError(eternamID, "TokenDoesNotExist");
 		});
 
 		// TODO: tester que les attributs FatherID/MotherID sont corrects dans le JSON
@@ -366,7 +366,7 @@ describe("EternamID contract", function () {
 		it("Should revert for non-existing token", async function () {
 			({ owner, user1, user2, teamWallet, usdc, eternamID } = await setUpSmartContracts());
 			await expect(eternamID.getTokenHash(1))
-				.to.be.revertedWith("TokenId doesn't exist");
+				.to.be.revertedWithCustomError(eternamID, "TokenDoesNotExist");
 		});
 	});
 
