@@ -61,7 +61,7 @@ const EternamID = () => {
 	return (
 		<div className="space-y-6">
 			<div className="bento-grid">
-				<div className="bento-card col-span-6 row-span-1 flex items-center justify-between md:col-span-4">
+				<div className="bento-card col-span-12 sm:col-span-6 md:col-span-4 row-span-1 flex items-center justify-between">
 					<div className="flex items-center gap-4">
 						<div className="icon-box icon-box-cyan">
 							<WalletIcon className="h-5 w-5 text-eternam-dark" />
@@ -87,7 +87,7 @@ const EternamID = () => {
 					/>
 				</div>
 
-				<div className="bento-card col-span-6 row-span-1 flex items-center justify-between md:col-span-4">
+				<div className="bento-card col-span-12 sm:col-span-6 md:col-span-4 row-span-1 flex items-center justify-between">
 					<div className="flex items-center gap-4">
 						<div className="icon-box icon-box-purple">
 							<UsersIcon className="h-5 w-5 text-white" />
@@ -107,7 +107,7 @@ const EternamID = () => {
 					<div className="status-dot status-dot-emerald" />
 				</div>
 
-				<div className="bento-card col-span-12 row-span-1 flex items-center justify-between md:col-span-4">
+				<div className="bento-card col-span-12 sm:col-span-12 md:col-span-4 row-span-1 flex items-center justify-between">
 					<div className="flex items-center gap-4">
 						<div className="icon-box icon-box-emerald">
 							<SparklesIcon className="h-5 w-5 text-eternam-dark" />
@@ -126,11 +126,11 @@ const EternamID = () => {
 			</div>
 
 			<div className="bento-grid">
-				<div className="col-span-12 row-span-3 lg:col-span-7">
+				<div className="col-span-12 md:col-span-6 lg:col-span-7 row-span-3">
 					<NFTBalance />
 				</div>
 
-				<div className="col-span-12 row-span-3 lg:col-span-5">
+				<div className="col-span-12 md:col-span-6 lg:col-span-5 row-span-3">
 					<MintEternamID
 						totalSupply={totalSupply}
 						onMintSuccess={refetchNFTSupply}

@@ -93,7 +93,7 @@ const Faucet = ({ onFaucetSuccess }: FaucetProps) => {
             <DialogTrigger asChild>
                 <button className="btn-secondary gap-2">
                     <DropletIcon className="h-4 w-4" />
-                    Faucet
+                    <span className="md:hidden lg:inline-block">Faucet</span>
                 </button>
             </DialogTrigger>
 
