@@ -102,7 +102,7 @@ export default function NotConnected() {
 						}`}
 					style={{ animationDelay: '200ms' }}
 				>
-					<span className="text-xs uppercase tracking-wider text-eternam-muted">Marché France</span>
+					<span className="text-xs uppercase tracking-wider text-eternam-muted">En France</span>
 					<div>
 						<p className="text-5xl font-bold text-gradient">650K</p>
 						<p className="mt-1 text-sm text-eternam-muted">décès par an</p>

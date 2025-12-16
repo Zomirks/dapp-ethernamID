@@ -39,9 +39,9 @@ const Footer = () => {
     return (
         <footer className="relative z-10 border-t border-border-subtle">
             <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+                <div className="flex flex-col gap-8 md:flex-row md:justify-between">
                     {/* Brand */}
-                    <div className="md:col-span-1">
+                    <div>
                         <Link href="/" className="flex items-center gap-2.5">
                             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-eternam-cyan to-eternam-cyan-muted">
                                 <LogoIcon className="h-5 w-5 text-eternam-dark" />
@@ -56,109 +56,51 @@ const Footer = () => {
 
                         <div className="mt-6 flex items-center gap-3">
                             <a
-                                href="#"
-                                className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-2 text-eternam-muted transition-colors hover:bg-surface-3 hover:text-eternam-light"
-                                aria-label="Twitter"
-                            >
-                                <TwitterIcon className="h-4 w-4" />
-                            </a>
-                            <a
-                                href="#"
-                                className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-2 text-eternam-muted transition-colors hover:bg-surface-3 hover:text-eternam-light"
-                                aria-label="Discord"
-                            >
-                                <DiscordIcon className="h-4 w-4" />
-                            </a>
-                            <a
-                                href="#"
+                                href="https://github.com/Zomirks/dapp-eternamID"
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-2 text-eternam-muted transition-colors hover:bg-surface-3 hover:text-eternam-light"
                                 aria-label="Github"
                             >
-                                <GithubIcon className="h-4 w-4" />
-                            </a>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-eternam-light">
-                            Produit
-                        </h4>
-                        <ul className="space-y-3 text-sm">
-                            <li>
-                                <Link href="#features" className="text-eternam-muted transition-colors hover:text-eternam-light">
-                                    Fonctionnalités
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="#pricing" className="text-eternam-muted transition-colors hover:text-eternam-light">
-                                    Tarifs
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="#faq" className="text-eternam-muted transition-colors hover:text-eternam-light">
-                                    FAQ
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-eternam-light">
-                            Ressources
-                        </h4>
-                        <ul className="space-y-3 text-sm">
-                            <li>
-                                <Link href="#" className="text-eternam-muted transition-colors hover:text-eternam-light">
-                                    Documentation
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="#" className="text-eternam-muted transition-colors hover:text-eternam-light">
-                                    Blog
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="#" className="text-eternam-muted transition-colors hover:text-eternam-light">
-                                    Support
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-eternam-light">
-                            Légal
-                        </h4>
-                        <ul className="space-y-3 text-sm">
-                            <li>
-                                <Link href="#" className="text-eternam-muted transition-colors hover:text-eternam-light">
-                                    Mentions légales
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/rgpd" className="text-eternam-muted transition-colors hover:text-eternam-light">
-                                    RGPD
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/conditions-generales-de-ventes" className="text-eternam-muted transition-colors hover:text-eternam-light">
-                                    CGV
-                                </Link>
-                            </li>
-                        </ul>
+                            <GithubIcon className="h-4 w-4" />
+                        </a>
                     </div>
                 </div>
-                <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border-subtle pt-8 md:flex-row">
-                    <p className="text-sm text-eternam-muted">
-                        © {currentYear} Eternam ID. Tous droits réservés.
-                    </p>
-                    <div className="flex items-center gap-2 text-xs text-eternam-muted">
-                        <span>Propulsé par</span>
-                        <span className="badge badge-cyan">Arweave</span>
-                    </div>
+
+                <div>
+                    <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-eternam-light">
+                        Légal
+                    </h4>
+                    <ul className="space-y-3 text-sm">
+                        <li>
+                            <Link href="#" className="text-eternam-muted transition-colors hover:text-eternam-light">
+                                Mentions légales
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/rgpd" className="text-eternam-muted transition-colors hover:text-eternam-light">
+                                RGPD
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/conditions-generales-de-ventes" className="text-eternam-muted transition-colors hover:text-eternam-light">
+                                CGV
+                            </Link>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </footer>
+            <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border-subtle pt-8 md:flex-row">
+                <p className="text-sm text-eternam-muted">
+                    © {currentYear} Eternam ID. Tous droits réservés.
+                </p>
+                <div className="flex items-center gap-2 text-xs text-eternam-muted">
+                    <span>Propulsé par</span>
+                    <span className="badge badge-cyan">Arweave</span>
+                </div>
+            </div>
+        </div>
+        </footer >
     );
 };
 
